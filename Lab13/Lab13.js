@@ -12,7 +12,7 @@ const dbConfig = {
 
 const conn = mysql.createConnection(dbConfig);
 
-
+//PARTE A
 app.get("/trabajadores", function (req, res) {
     conn.query("SELECT * FROM trabajadores", function (err, results) {
         if (err) {
@@ -24,6 +24,97 @@ app.get("/trabajadores", function (req, res) {
     });
 });
 
+//PARTE B
+app.get("/trabajadores/:dni", function (req, res) {
+    let trabajadoresDni = req.params.dni;
+    let sql = "SELECT t.nombres, t.apellidos, t.correo, t.dni, t.idsede, s.nombreSede " +
+        "FROM trabajadores t " +
+        "LEFT JOIN sedes s ON t.idsede = s.idsede " +
+        "WHERE dni = ?;";
+
+    let params = [trabajadoresDni];
+
+    conn.query(sql, params, function (err, results) {
+        if (err) {
+            console.error("Error al obtener trabajador por DNI:", err);
+            res.status(500).send("Error al obtener trabajador por DNI");
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//PARTE C
+app.get("/trabajadores/ventas/:dni", function (req, res) {
+    let trabajadoresDni = req.params.dni;
+    let sql = "SELECT v.fecha, i.nombre, i.numeroserie, m.nombre as \"marca\"\n" +
+        "FROM ventas v\n" +
+        "left join inventario i on  v.id_inventario = i.idinventario\n" +
+        "left join marcas m on i.idmarca = m.idmarca\n" +
+        "where v.dniTrabajador = ?;";
+
+    let params = [trabajadoresDni];
+
+    conn.query(sql, params, function (err, results) {
+        if (err) {
+            console.error("Error al obtener trabajador por DNI:", err);
+            res.status(500).send("Error al obtener trabajador por DNI");
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//PARTE D
+app.get("/sedes", function (req, res) {
+    conn.query("SELECT * FROM sedes", function (err, results) {
+        if (err) {
+            console.error("Error al obtener trabajadores:", err);
+            res.status(500).send("Error al obtener trabajadores");
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//PARTE E
+app.get("/sedes/:idsede", function (req, res) {
+    let idsede = req.params.idsede;
+    let sql = "select * \n" +
+        "from sedes s\n" +
+        "where s.idsede = ?";
+
+    let params = [idsede];
+
+    conn.query(sql, params, function (err, results) {
+        if (err) {
+            console.error("Error al obtener sede por ID:", err);
+            res.status(500).send("Error al obtener sede por ID");
+        } else {
+            res.json(results);
+        }
+    });
+});
+
+//PARTE F
+app.get("/sedes/trabajadores/:idsede", function (req, res) {
+    let idsede = req.params.idsede;
+    let sql = "select t.nombres, t.apellidos, t.correo, t.dni, s.idsede\n" +
+        "from sedes s\n" +
+        "left join trabajadores t on s.idsede = t.idsede\n" +
+        "where s.idsede = ?";
+
+    let params = [idsede];
+
+    conn.query(sql, params, function (err, results) {
+        if (err) {
+            console.error("Error al obtener sede por ID:", err);
+            res.status(500).send("Error al obtener sede por ID");
+        } else {
+            res.json(results);
+        }
+    });
+});
 
 app.on('close', function () {
     conn.end(function (err) {
