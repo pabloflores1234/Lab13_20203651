@@ -61,7 +61,7 @@
                         nuevafila.append($("<td>").text(i+1).addClass("align-middle"));
                         nuevafila.append($("<td>").text(resultados.nombres + " " + resultados.apellidos).addClass("align-middle"));
                         nuevafila.append($("<td>").text(resultados.correo).addClass("align-middle"));
-                        nuevafila.append($("<td>").append('<a class="btn btn-info">Más detalles</a>').addClass("align-middle"));
+                        nuevafila.append($("<td>").append('<a class="btn btn-info" href="DetallesTrabajador.html?dni=' + resultados.dni + '">Más detalles</a>' ).addClass("align-middle"));
 
                         $("table").append(nuevafila);
 

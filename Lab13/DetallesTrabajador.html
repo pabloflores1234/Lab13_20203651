@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <title>Mas detalles</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand">Detalles Trabajador</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <h1>Detalles Trabajador</h1>
+    <button class="btn btn-info" onclick="location.href='/'">Regresar</button>
+    <br>
+    <br>
+    <table class="table table-sm text-center" id="tabla1">
+        <tr>
+            <th class="align-middle">Id del Equipo</th>
+            <th class="align-middle">Nombre</th>
+            <th class="align-middle">Estadio</th>
+        </tr>
+    </table>
+    <br>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let url = new URLSearchParams(window.location.search);
+    let uri = url.get('dni');
+    let dniactual = decodeURI(uri);
+
+    $(document).ready(function () {
+        $.ajax({
+            method: "GET",
+            url: "http://localhost:3000/trabajadores/" + dniactual,
+            dataType: "json"
+        })
+            .done(function (equipo) {
+                for (let i = 0; i <= trabajadores.length; i++) {
+                    const resultados = trabajadores[i];
+                    const nuevafila = $("<tr>");
+
+                    nuevafila.append($("<td>").text(i+1).addClass("align-middle"));
+                    nuevafila.append($("<td>").text(resultados.nombres + " " + resultados.apellidos).addClass("align-middle"));
+                    nuevafila.append($("<td>").text(resultados.correo).addClass("align-middle"));
+                    nuevafila.append($("<td>").append('<a class="btn btn-info" href="DetallesTrabajador.html?dni=' + resultados.dni + '">Más detalles</a>' ).addClass("align-middle"));
+
+                    $("table").append(nuevafila);
+                }
+            })
+            .fail(function (err) {
+                console.log(err);
+                alert(err);
+            });
+    });
+    //PERDON PROFE, NO LLEGUE
+</script>
+</body>
+</html>
