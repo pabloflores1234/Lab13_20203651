@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 const app = express();
+const path = require('path');
 
 // Configuración de la base de datos
 const dbConfig = {
@@ -11,7 +12,7 @@ const dbConfig = {
 };
 
 const conn = mysql.createConnection(dbConfig);
-
+app.use(express.static(path.join(__dirname)));
 //PARTE A
 app.get("/trabajadores", function (req, res) {
     conn.query("SELECT * FROM trabajadores", function (err, results) {
@@ -123,6 +124,16 @@ app.on('close', function () {
         }
         console.log('Conexión de la base de datos cerrada.');
     });
+});
+
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname, 'pagprincipal.html'));
+});
+app.get("/trabajadorespagina", function (req, res) {
+    res.sendFile(path.join(__dirname, 'trabajadores.html'));
+});
+app.get("/sedespagina", function (req, res) {
+    res.sendFile(path.join(__dirname, 'sedes.html'));
 });
 
 
